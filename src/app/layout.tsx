@@ -1,17 +1,18 @@
-import { type Session } from "next-auth";
+'use client'
+import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { type AppType } from "next/app";
-import { api } from "@/utils/api";
-import "@/styles/globals.css";
-const MyApp: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+export default function RootLayout({ children, session }: {
+  children: React.ReactNode,
+  session: Session | null,
+}) {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      {/* You have to wrap ur app inside a html tag and put ur children in the body this is the correct way of doing it */}
+      <html lang="en">
+        <body>
+          {children}
+        </body>
+      </html>
     </SessionProvider>
   );
-};
-
-export default api.withTRPC(MyApp);
+}

@@ -1,19 +1,36 @@
 'use client'
-
-import { type NextPage } from "next";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Head from "next/head";
-import Link from "next/link";
+import {
+  LoginButton,
+  LogoutButton,
+} from "@/components/button.component";
 import { api } from "@/utils/api";
+import { useSession } from "next-auth/react";
 
-const Home: React.FC = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
+const App = () => {
+  const session = useSession();
+  const { data: exampleData } = api.example.hello.useQuery({
+    text: "world",
+  },
+    { refetchOnWindowFocus: false }
+  );
   return (
-    <>
-      <main>
-        <h1>Welcome to the T3 Taur App </h1>
-      </main>
-    </>
-  )
-};
+    <div>
+      {session?.data ? (
+        <div>
+          <LogoutButton />
+          {/* <ProfileButton /> */}
+          <p>Hello from {exampleData?.greeting}</p>
+        </div>
+
+      ) : (
+        <div>
+          <LoginButton />
+        </div>
+      )}
+    </div>
+  );
+}
+export default api.withTRPC(App);
+
+
